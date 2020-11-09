@@ -1,10 +1,8 @@
 # BUSCAMINAS: Javier Fuentes
 
-
 En este programa se encuentra la base para el Buscaminas de Desarrollo de intefaces (DAM2).
 
 ## Pasos
-
 
 1. Descárgate el cliente de github si no lo tienes en tu equipo. Créate una cuenta y loguéate.
 
@@ -14,8 +12,6 @@ En este programa se encuentra la base para el Buscaminas de Desarrollo de intefa
 
 4. Implementa el buscaminas. No olvides ir haciendo "commits" y "pushs" según vayas avanzando en el desarrollo. Así podrás llevar un seguimiento.
 
-
-
-# Licencia
+## Licencia
 
 La licencia de este repositorio y todo su contenido es [GNU General Public License v.3.0](https://es.wikipedia.org/wiki/Licencia_p%C3%BAblica_general_de_GNU) 
