@@ -25,6 +25,8 @@ public class ControlJuego {
 		
 		//Inicializamos una nueva partida
 		inicializarPartida();
+
+		depurarTablero();
 	}
 	
 	
@@ -36,6 +38,25 @@ public class ControlJuego {
 	public void inicializarPartida(){
 
 		//TODO: Repartir minas e inicializar puntaci�n. Si hubiese un tablero anterior, lo pongo todo a cero para inicializarlo.
+
+		// ArrayList que guardará todas las posiciones del tablero.
+		ArrayList<Integer> posiciones = new ArrayList<>();
+		for (int i = 0; i < LADO_TABLERO*LADO_TABLERO; i++) {
+			posiciones.add(i);
+		}
+
+		// Se saca una posicion aleatoria del ArrayList y se coloca una mina en ella.
+		// Despues se borra esa posción para que no vuelva a salir para colocar una mina.
+		Random rd = new Random();
+		int indice,posicion,x , y;
+		for (int i = 0; i < MINAS_INICIALES; i++) {
+			indice = rd.nextInt(posiciones.size());
+			posicion = posiciones.get(indice);
+			x = posicion % LADO_TABLERO;
+			y = posicion / LADO_TABLERO;
+			tablero[x][y] = MINA;
+			posiciones.remove(indice);
+		}
 		
 		
 		
@@ -57,8 +78,31 @@ public class ControlJuego {
 	 * @param j: posición horizontal de la casilla a rellenar
 	 * @return : El número de minas que hay alrededor de la casilla [i][j]
 	 **/
-	private int calculoMinasAdjuntas(int i, int j){
-		return 0;
+	private int calculoMinasAdjuntas(int x, int y){
+		int contadorMina = 0;
+
+		// Posicion de x donde empieza a buscar.
+		int xInicial = Math.max(0, (x-1));
+
+		// Posicion de x donde termina de buscar.
+		int xFinal = Math.min(LADO_TABLERO-1, (x+1));
+
+		// Posicion de y donde empieza a buscar.
+		int yInicial = Math.max(0, (y-1));
+
+		// Posicion de y donde termina de buscar.
+		int yFinal = Math.min(LADO_TABLERO-1, (y+1));
+
+		for (int i = xInicial; i <= xFinal; i++) {
+			for (int j = yInicial; j <= yFinal; j++) {
+				if(tablero[i][j]==MINA){
+					contadorMina++;
+				}
+					
+			}
+		}
+		
+		return contadorMina;
 	}
 	
 	/**
