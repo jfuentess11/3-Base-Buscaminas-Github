@@ -143,6 +143,18 @@ public class VentanaPrincipal {
 	 */
 	public void inicializarListeners(){
 		//TODO
+
+		botonEmpezar.addActionListener((e)->{
+			refrescarPantalla();
+		});
+
+		for (int i = 0; i < getJuego().LADO_TABLERO; i++) {
+			for (int j = 0; j < getJuego().LADO_TABLERO; j++) {
+				botonesJuego[i][j].addActionListener((e)->{
+					new ActionBoton().actionPerformed(e);
+				});
+			}
+		}
 	}
 	
 	
@@ -170,13 +182,14 @@ public class VentanaPrincipal {
 	 */
 	public void mostrarFinJuego(boolean porExplosion) {
 		//TODO
+		panelJuego.setEnabled(false);
 	}
 
 	/**
 	 * Método que muestra la puntuación por pantalla.
 	 */
 	public void actualizarPuntuacion() {
-		//TODO
+		pantallaPuntuacion.setText(String.valueOf(getJuego().getPuntuacion()));
 	}
 	
 	/**
