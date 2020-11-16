@@ -2,8 +2,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -144,7 +142,8 @@ public class VentanaPrincipal {
 	public void inicializarListeners(){
 
 		botonEmpezar.addActionListener((e)->{
-			refrescarPantalla();
+			reiniciar();
+
 		});
 
 		for (int i = 0; i < getJuego().LADO_TABLERO; i++) {
@@ -155,7 +154,6 @@ public class VentanaPrincipal {
 			}
 		}
 	}
-	
 	
 	/**
 	 * Pinta en la pantalla el número de minas que hay alrededor de la celda
@@ -173,10 +171,10 @@ public class VentanaPrincipal {
 		panelesJuego[i][j].removeAll();
 		JLabel label = new JLabel(String.valueOf(getJuego().getMinasAlrededor(i, j)));
 		label.setForeground(correspondenciaColores[Integer.parseInt(label.getText())]);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
 		panelesJuego[i][j].add(label);
 		refrescarPantalla();
 	}
-	
 	
 	/**
 	 * Muestra una ventana que indica el fin del juego
@@ -184,13 +182,18 @@ public class VentanaPrincipal {
 	 * @post : Todos los botones se desactivan excepto el de volver a iniciar el juego.
 	 */
 	public void mostrarFinJuego(boolean porExplosion) {
-		//TODO
-		panelJuego.setEnabled(false);
-		if(porExplosion){
-			JOptionPane perder = new JOptionPane();
-		}else{
-			JOptionPane ganar = new JOptionPane();
+		for (int i = 0; i < botonesJuego.length; i++) {
+			for (int j = 0; j < botonesJuego.length; j++) {
+				botonesJuego[i][j].setEnabled(false);
+			}	
 		}
+		new JOptionPane();
+		if(porExplosion){
+			JOptionPane.showMessageDialog(ventana, "¡HAS PERDIDIO!\nHas explotado una bomba...", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
+		}else{	
+			JOptionPane.showMessageDialog(ventana, "¡ENORABUENA!\nHas ganado la partida", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
+		}
+		
 	}
 
 	/**
@@ -215,6 +218,15 @@ public class VentanaPrincipal {
 	public ControlJuego getJuego() {
 		return juego;
 	}
+
+	public void reiniciar() {
+		ventana.getContentPane().removeAll();
+		juego = new ControlJuego();
+		inicializarComponentes();
+		inicializarListeners();
+		refrescarPantalla();
+	}
+	
 
 	/**
 	 * Método para inicializar el programa
