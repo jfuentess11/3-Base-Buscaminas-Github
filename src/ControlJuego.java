@@ -12,19 +12,35 @@ import java.util.Random;
  */
 public class ControlJuego {
 	final static int MINA = -1;
-	final int MINAS_INICIALES = 20;
-	final int LADO_TABLERO = 10;
+	private int minasIniciales = 20;
+	private int ladoTablero = 10;
 
 	private int [][] tablero;
 	private int puntuacion;
 	
-	
-	public ControlJuego() {
-		//Creamos el tablero:
-		tablero = new int[LADO_TABLERO][LADO_TABLERO];
+	public ControlJuego(int minas_iniciales,int lado_tablero){
+
+		minasIniciales = minas_iniciales;
+		ladoTablero = lado_tablero;
+
+		tablero = new int[ladoTablero][ladoTablero];
 		
 		//Inicializamos una nueva partida
 		inicializarPartida();
+
+		depurarTablero();
+
+	}
+
+
+	public ControlJuego() {
+		//Creamos el tablero:
+		tablero = new int[ladoTablero][ladoTablero];
+		
+		//Inicializamos una nueva partida
+		inicializarPartida();
+
+		depurarTablero();
 	}
 	
 	
@@ -39,7 +55,7 @@ public class ControlJuego {
 
 		// ArrayList que guardará todas las posiciones del tablero.
 		ArrayList<Integer> posiciones = new ArrayList<>();
-		for (int i = 0; i < LADO_TABLERO*LADO_TABLERO; i++) {
+		for (int i = 0; i < ladoTablero*ladoTablero; i++) {
 			posiciones.add(i);
 		}
 
@@ -47,11 +63,11 @@ public class ControlJuego {
 		// Despues se borra esa posción para que no vuelva a salir para colocar una mina.
 		Random rd = new Random();
 		int indice,posicion,x , y;
-		for (int i = 0; i < MINAS_INICIALES; i++) {
+		for (int i = 0; i < minasIniciales; i++) {
 			indice = rd.nextInt(posiciones.size());
 			posicion = posiciones.get(indice);
-			x = posicion % LADO_TABLERO;
-			y = posicion / LADO_TABLERO;
+			x = posicion % ladoTablero;
+			y = posicion / ladoTablero;
 			tablero[x][y] = MINA;
 			posiciones.remove(indice);
 		}
@@ -84,8 +100,8 @@ public class ControlJuego {
 		int jInicial = Math.max(0, (j-1));
 
 		// Posicion de donde se termina de buscar.
-		int iFinal = Math.min(LADO_TABLERO-1, (i+1));
-		int jFinal = Math.min(LADO_TABLERO-1, (j+1));
+		int iFinal = Math.min(ladoTablero-1, (i+1));
+		int jFinal = Math.min(ladoTablero-1, (j+1));
 
 		for (int vertical = iInicial; vertical <= iFinal; vertical++) {
 			for (int horizontal = jInicial; horizontal <= jFinal; horizontal++) {
@@ -107,12 +123,12 @@ public class ControlJuego {
 	 * @return : Verdadero si no ha explotado una mina. Falso en caso contrario.
 	 */
 	public boolean abrirCasilla(int i, int j){
-		boolean limpio = false;
+		boolean hayMina = false;
 		if(getMinasAlrededor(i, j)!=MINA){
-			limpio = true;
+			hayMina = true;
 			this.puntuacion++;
 		}
-		return limpio;
+		return hayMina;
 	}
 	
 	
@@ -123,7 +139,7 @@ public class ControlJuego {
 	 **/
 	public boolean esFinJuego(){
 		// Si la puntuación es igual al número de celdas que no son minas ha ganado. (true)
-		return getPuntuacion()==(LADO_TABLERO*LADO_TABLERO-MINAS_INICIALES);
+		return getPuntuacion()==(ladoTablero*ladoTablero-minasIniciales);
 	}
 	
 	
@@ -158,6 +174,14 @@ public class ControlJuego {
 	 */
 	public int getPuntuacion() {
 		return this.puntuacion;
+	}
+
+	public int getMinasIniciales(){
+		return minasIniciales;
+	}
+
+	public int getLadoTablero(){
+		return ladoTablero;
 	}
 	
 }
