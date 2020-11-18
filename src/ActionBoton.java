@@ -3,6 +3,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+
 /**
  * Clase que implementa el listener de los botones del Buscaminas. De alguna
  * manera tendrá que poder acceder a la ventana principal. Se puede lograr
@@ -46,30 +47,7 @@ public class ActionBoton implements ActionListener {
 			ventana.actualizarPuntuacion();
 
 			if (ventana.getJuego().getMinasAlrededor(i, j) == 0) {
-
-				int iInicial = Math.max(0, (i - 1));
-				int jInicial = Math.max(0, (j - 1));
-
-				int iFinal = Math.min(ventana.getJuego().getLadoTablero() - 1, (i + 1));
-				int jFinal = Math.min(ventana.getJuego().getLadoTablero() - 1, (j + 1));
-
-				for (int vertical = iInicial; vertical <= iFinal; vertical++) {
-					for (int horizontal = jInicial; horizontal <= jFinal; horizontal++) {
-						if (ventana.getJuego().getMinasAlrededor(vertical, horizontal) != ControlJuego.MINA) {
-							if(ventana.getJuego().getMinasAlrededor(vertical, horizontal) == 0){
-								if(ventana.panelesJuego[vertical][horizontal].getComponent(0) instanceof JButton){
-									JButton siguienteBoton = (JButton)ventana.panelesJuego[vertical][horizontal].getComponent(0);
-									siguienteBoton.doClick();
-								}
-							}else{
-								ventana.mostrarNumMinasAlrededor(vertical, horizontal);
-								ventana.actualizarPuntuacion();	
-							}
-														
-						}
-
-					}
-				}
+				abrirMasCasillas(i, j, e);
 			}
 
 			if (ventana.getJuego().esFinJuego()) {
@@ -78,6 +56,32 @@ public class ActionBoton implements ActionListener {
 
 		} else {
 			ventana.mostrarFinJuego(true);
+		}
+	}
+
+	public void abrirMasCasillas(int i, int j, ActionEvent e) {
+
+		int iInicial = Math.max(0, (i - 1));
+		int jInicial = Math.max(0, (j - 1));
+
+		int iFinal = Math.min(ventana.getJuego().getLadoTablero() - 1, (i + 1));
+		int jFinal = Math.min(ventana.getJuego().getLadoTablero() - 1, (j + 1));
+
+		for (int vertical = iInicial; vertical <= iFinal; vertical++) {
+			for (int horizontal = jInicial; horizontal <= jFinal; horizontal++) {
+				if (vertical != i || horizontal != j) { // para que no busque en su misma posición.
+
+					switch (ventana.getJuego().getMinasAlrededor(vertical, horizontal)) {
+						case ControlJuego.MINA:
+							break;
+						default:
+							if (ventana.panelesJuego[vertical][horizontal].getComponent(0) instanceof JButton) {
+								JButton siguienteBoton = (JButton) ventana.panelesJuego[vertical][horizontal].getComponent(0);
+								siguienteBoton.doClick();
+							}
+					}
+				}
+			}
 		}
 	}
 }

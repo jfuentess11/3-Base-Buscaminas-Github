@@ -3,6 +3,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,7 +15,7 @@ import javax.swing.SwingConstants;
 /**
  * Ventana principal del Buscaminas
  * 
- * @author Jsvier Fuentes
+ * @author Javier Fuentes
  */
 public class VentanaPrincipal {
 
@@ -43,7 +44,7 @@ public class VentanaPrincipal {
 	// Constructor, marca el tamaño y el cierre del frame
 	public VentanaPrincipal() {
 		ventana = new JFrame();
-		ventana.setBounds(100, 100, 700, 500);
+		ventana.setExtendedState(JFrame.MAXIMIZED_BOTH); // Para que se inicie en pantalla completa
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		crearControlJuego();
 
@@ -101,7 +102,8 @@ public class VentanaPrincipal {
 		panelJuego = new JPanel();
 		panelJuego.setLayout(new GridLayout(getJuego().getLadoTablero(), getJuego().getLadoTablero()));
 
-		botonEmpezar = new JButton("Go!");
+		botonEmpezar = new JButton();
+		botonEmpezar.setIcon(new ImageIcon("img/caraFeliz.png"));
 		pantallaPuntuacion = new JTextField("0");
 		pantallaPuntuacion.setEditable(false);
 		pantallaPuntuacion.setHorizontalAlignment(SwingConstants.CENTER);
@@ -228,6 +230,7 @@ public class VentanaPrincipal {
 		}
 		new JOptionPane();
 		if (porExplosion) {
+			botonEmpezar.setIcon(new ImageIcon("img/caraTriste.png"));
 			JOptionPane.showMessageDialog(ventana, "¡HAS PERDIDIO!\nHas explotado una bomba...", "Fin del Juego",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else {
