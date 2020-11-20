@@ -1,7 +1,12 @@
+package buscaminas;
+
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -11,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.plaf.FontUIResource;
 
 /**
  * Ventana principal del Buscaminas
@@ -25,6 +31,7 @@ public class VentanaPrincipal {
 	JPanel panelEmpezar;
 	JPanel panelPuntuacion;
 	JPanel panelJuego;
+	DialogoConfiguracion dialogo = new DialogoConfiguracion(this);
 
 	// Todos los botones se meten en un panel independiente.
 	// Hacemos esto para que podamos cambiar después los componentes por otros
@@ -32,7 +39,7 @@ public class VentanaPrincipal {
 	JButton[][] botonesJuego;
 
 	// Correspondencia de colores para las minas:
-	Color correspondenciaColores[] = { Color.BLACK, Color.CYAN, Color.GREEN, Color.ORANGE, Color.RED, Color.RED,
+	Color correspondenciaColores[] = { Color.BLACK, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.RED, Color.RED,
 			Color.RED, Color.RED, Color.RED, Color.RED };
 
 	JButton botonEmpezar;
@@ -44,47 +51,36 @@ public class VentanaPrincipal {
 	// Constructor, marca el tamaño y el cierre del frame
 	public VentanaPrincipal() {
 		ventana = new JFrame();
-		ventana.setExtendedState(JFrame.MAXIMIZED_BOTH); // Para que se inicie en pantalla completa
+		ventana.setBounds(600, 100, 600, 800);
+		// ventana.setExtendedState(JFrame.MAXIMIZED_BOTH); // Para que se inicie en
+		// pantalla completa
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		crearControlJuego();
 
 	}
 
 	/**
-	 * Método que nos dejará cambiar la configuracion por defecto del buscaminas.
-	 * Si quiere juagr con la configuración predefinida se iniciará juego con un contructor vacio.
-	 * Si se quiere jugar con una configuración personalizada se inicializará juego con el constructor parametrizado.
+	 * Método que nos dejará cambiar la configuracion por defecto del buscaminas. Si
+	 * quiere juagr con la configuración predefinida se iniciará juego con un
+	 * contructor vacio. Si se quiere jugar con una configuración personalizada se
+	 * inicializará juego con el constructor parametrizado.
 	 */
 	public void crearControlJuego() {
+
+		juego = null; // Se pone nulo para que funcionen correctamente el método.
+
 		int cambiar = JOptionPane.showConfirmDialog(ventana,
-				"¿Quieres jugar con los valores por defecto de la configuración?","Configuración",JOptionPane.YES_NO_OPTION);
+				"¿Quieres jugar con los valores por defecto de la configuración?", "Configuración",
+				JOptionPane.YES_NO_OPTION);
 
 		if (JOptionPane.NO_OPTION == cambiar) {
-
-			int minas;
-			int lado;
-			String respuestaLado = JOptionPane.showInputDialog(ventana, "Indica el tamaño que tendrá el panel de juego",
-					10);
-			try {
-				lado = Integer.valueOf(respuestaLado);	
-			} catch (Exception e) {
-				lado = 10;
-			}
-
-			String respuestaMinas = JOptionPane.showInputDialog(ventana, "Indica el número de minas que quieres que haya",
-					20);
-
-			try {
-				minas = Integer.valueOf(respuestaMinas);	
-			} catch (Exception e) {
-				minas = 20;
-			}
-
-			juego = new ControlJuego(minas, lado);
-
-		} else {
+			dialogo.setVisible(true);
+		}
+		// Si se sale de la configuración se iniciará un juego por defecto
+		if (juego == null) {
 			juego = new ControlJuego();
 		}
+
 	}
 
 	// Inicializa todos los componentes del frame
@@ -95,23 +91,29 @@ public class VentanaPrincipal {
 
 		// Inicializamos componentes
 		panelImagen = new JPanel();
+		panelImagen.setBackground(Color.decode("#FAFFFF"));
 		panelEmpezar = new JPanel();
 		panelEmpezar.setLayout(new GridLayout(1, 1));
+		panelEmpezar.setBackground(Color.decode("#FAFFFF"));
 		panelPuntuacion = new JPanel();
 		panelPuntuacion.setLayout(new GridLayout(1, 1));
+		panelPuntuacion.setBackground(Color.decode("#FAFFFF"));
 		panelJuego = new JPanel();
+		panelJuego.setBackground(Color.decode("#FAFFFF"));
 		panelJuego.setLayout(new GridLayout(getJuego().getLadoTablero(), getJuego().getLadoTablero()));
 
 		botonEmpezar = new JButton();
 		botonEmpezar.setIcon(new ImageIcon("img/caraFeliz.png"));
 		pantallaPuntuacion = new JTextField("0");
+		pantallaPuntuacion.setBackground(Color.decode("#FAFFFF"));
+		pantallaPuntuacion.setFont(new FontUIResource("", Font.BOLD, 20));
 		pantallaPuntuacion.setEditable(false);
 		pantallaPuntuacion.setHorizontalAlignment(SwingConstants.CENTER);
 
 		// Bordes y colores:
-		panelImagen.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+		panelImagen.setBorder(BorderFactory.createLineBorder(Color.decode("#949BBA"), 1));
 		panelEmpezar.setBorder(BorderFactory.createTitledBorder("Empezar"));
-		panelPuntuacion.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+		panelPuntuacion.setBorder(BorderFactory.createLineBorder(Color.decode("#949BBA"), 1));
 		panelJuego.setBorder(BorderFactory.createTitledBorder("Juego"));
 
 		// Colocamos los componentes:
@@ -163,7 +165,7 @@ public class VentanaPrincipal {
 		botonesJuego = new JButton[getJuego().getLadoTablero()][getJuego().getLadoTablero()];
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego[i].length; j++) {
-				botonesJuego[i][j] = new JButton("-");
+				botonesJuego[i][j] = new JButton();
 				panelesJuego[i][j].add(botonesJuego[i][j]);
 			}
 		}
@@ -187,9 +189,7 @@ public class VentanaPrincipal {
 
 		for (int i = 0; i < getJuego().getLadoTablero(); i++) {
 			for (int j = 0; j < getJuego().getLadoTablero(); j++) {
-				botonesJuego[i][j].addActionListener((e) -> {
-					new ActionBoton(this).actionPerformed(e);
-				});
+				botonesJuego[i][j].addActionListener(new ActionBoton(this, i, j));
 			}
 		}
 	}
@@ -199,15 +199,26 @@ public class VentanaPrincipal {
 	 * botón que haya en la celda determinada y añade un JLabel centrado y no
 	 * editable con el número de minas alrededor. Se pinta el color del texto según
 	 * la siguiente correspondecia (consultar la variable correspondeciaColor): - 0
-	 * : negro - 1 : cyan - 2 : verde - 3 : naranja - 4 ó más : rojo
+	 * : negro - 1 : azul - 2 : verde - 3 : magenta - 4 ó más : rojo
 	 * 
 	 * @param i: posición vertical de la celda.
 	 * @param j: posición horizontal de la celda.
 	 */
 	public void mostrarNumMinasAlrededor(int i, int j) {
 		panelesJuego[i][j].removeAll();
-		JLabel label = new JLabel(String.valueOf(getJuego().getMinasAlrededor(i, j)));
-		label.setForeground(correspondenciaColores[Integer.parseInt(label.getText())]);
+		int numMinas = getJuego().getMinasAlrededor(i, j);
+		JLabel label = new JLabel();
+		if (numMinas == ControlJuego.MINA) {
+			label.setIcon(new ImageIcon("img/mina.png"));
+		} else {
+			if (numMinas != 0) {
+				label.setText(String.valueOf(numMinas));
+				label.setForeground(correspondenciaColores[Integer.parseInt(label.getText())]);
+			}
+			panelesJuego[i][j].setBackground(Color.decode("#FAFFFF"));
+			actualizarPuntuacion();
+
+		}
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		panelesJuego[i][j].add(label);
 		refrescarPantalla();
@@ -223,11 +234,15 @@ public class VentanaPrincipal {
 	 *       juego.
 	 */
 	public void mostrarFinJuego(boolean porExplosion) {
+
+		mostrarMinas();
+
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego.length; j++) {
 				botonesJuego[i][j].setEnabled(false);
 			}
 		}
+
 		new JOptionPane();
 		if (porExplosion) {
 			botonEmpezar.setIcon(new ImageIcon("img/caraTriste.png"));
@@ -236,6 +251,21 @@ public class VentanaPrincipal {
 		} else {
 			JOptionPane.showMessageDialog(ventana, "¡ENORABUENA!\nHas ganado la partida", "Fin del Juego",
 					JOptionPane.INFORMATION_MESSAGE);
+		}
+
+	}
+
+	public void mostrarMinas() {
+
+		ArrayList<Integer> minas = juego.getPosicionesMinas();
+
+		int x;
+		int y;
+
+		for (int i = 0; i < minas.size(); i++) {
+			x = minas.get(i) % (juego.getLadoTablero());
+			y = minas.get(i) / (juego.getLadoTablero());
+			mostrarNumMinasAlrededor(x, y);
 		}
 
 	}

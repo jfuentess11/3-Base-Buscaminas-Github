@@ -1,3 +1,5 @@
+package buscaminas;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,6 +19,8 @@ public class ControlJuego {
 
 	private int [][] tablero;
 	private int puntuacion;
+
+	private ArrayList<Integer> minas = new ArrayList<>();
 	
 	public ControlJuego(int minas_iniciales,int lado_tablero){
 
@@ -62,7 +66,10 @@ public class ControlJuego {
 		// Se saca una posicion aleatoria del ArrayList y se coloca una mina en ella.
 		// Despues se borra esa posción para que no vuelva a salir para colocar una mina.
 		Random rd = new Random();
-		int indice,posicion,x , y;
+		int indice;
+		int posicion;
+		int x;
+		int y;
 		for (int i = 0; i < minasIniciales; i++) {
 			indice = rd.nextInt(posiciones.size());
 			posicion = posiciones.get(indice);
@@ -73,12 +80,15 @@ public class ControlJuego {
 		}
 		
 		
-		
-		//Al final del m�todo hay que guardar el n�mero de minas para las casillas que no son mina:
+		//Al final del método hay que guardar el n�mero de minas para las casillas que no son mina:
+		//Si es una mina añade su posición en el array list para luego mostrarlas al final del juego.
 		for (int i = 0; i < tablero.length; i++) {
 			for (int j = 0; j < tablero[i].length; j++) {
 				if (tablero[i][j] != MINA){
 					tablero[i][j] = calculoMinasAdjuntas(i,j);
+				}else{
+					posicion = (ladoTablero)*j+i;
+					minas.add(posicion);
 				}
 			}
 		}
@@ -176,12 +186,28 @@ public class ControlJuego {
 		return this.puntuacion;
 	}
 
+	/**
+	 * Metodo que devuelve las minas iniciales
+	 * @return Entero con las minas iniciales
+	 */
 	public int getMinasIniciales(){
 		return minasIniciales;
 	}
 
+	/**
+	 * Método que devuelve el tamaño del tablero
+	 * @return Un entero con el lado del tablero
+	 */
 	public int getLadoTablero(){
 		return ladoTablero;
+	}
+
+	/**
+	 * Método que devuelve un ArrayList con la posción de las minas del tablero.
+	 * @return ArrayList de enteros.
+	 */
+	public ArrayList<Integer> getPosicionesMinas(){
+		return minas;
 	}
 	
 }
