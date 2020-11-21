@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,7 +28,7 @@ public class VentanaPrincipal {
 
 	// La ventana principal, en este caso, guarda todos los componentes:
 	JFrame ventana;
-	JPanel panelImagen;
+	JPanel panelMinas;
 	JPanel panelEmpezar;
 	JPanel panelPuntuacion;
 	JPanel panelJuego;
@@ -44,6 +45,7 @@ public class VentanaPrincipal {
 
 	JButton botonEmpezar;
 	JTextField pantallaPuntuacion;
+	JTextField pantallaMinas;
 
 	// LA VENTANA GUARDA UN CONTROL DE JUEGO:
 	ControlJuego juego;
@@ -51,7 +53,8 @@ public class VentanaPrincipal {
 	// Constructor, marca el tamaño y el cierre del frame
 	public VentanaPrincipal() {
 		ventana = new JFrame();
-		ventana.setBounds(600, 100, 600, 800);
+		ventana.setBounds(0, 0, 400, 550);
+        ventana.setLocationRelativeTo(null);
 		// ventana.setExtendedState(JFrame.MAXIMIZED_BOTH); // Para que se inicie en
 		// pantalla completa
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -90,18 +93,24 @@ public class VentanaPrincipal {
 		ventana.setLayout(new GridBagLayout());
 
 		// Inicializamos componentes
-		panelImagen = new JPanel();
-		panelImagen.setBackground(Color.decode("#FAFFFF"));
+		panelMinas = new JPanel();
+		panelMinas.setLayout(new GridLayout());
+		panelMinas.setBackground(Color.decode("#FAFFFF"));
 		panelEmpezar = new JPanel();
-		panelEmpezar.setLayout(new GridLayout(1, 1));
+		panelEmpezar.setLayout(new GridLayout());
 		panelEmpezar.setBackground(Color.decode("#FAFFFF"));
 		panelPuntuacion = new JPanel();
-		panelPuntuacion.setLayout(new GridLayout(1, 1));
+		panelPuntuacion.setLayout(new GridLayout());
 		panelPuntuacion.setBackground(Color.decode("#FAFFFF"));
 		panelJuego = new JPanel();
 		panelJuego.setBackground(Color.decode("#FAFFFF"));
 		panelJuego.setLayout(new GridLayout(getJuego().getLadoTablero(), getJuego().getLadoTablero()));
 
+		pantallaMinas = new JTextField(String.valueOf(juego.getMinasIniciales()));
+		pantallaMinas.setBackground(Color.decode("#FAFFFF"));
+		pantallaMinas.setFont(new FontUIResource("", Font.BOLD, 20));
+		pantallaMinas.setEditable(false);
+		pantallaMinas.setHorizontalAlignment(SwingConstants.CENTER);
 		botonEmpezar = new JButton();
 		botonEmpezar.setIcon(new ImageIcon("img/caraFeliz.png"));
 		pantallaPuntuacion = new JTextField("0");
@@ -111,9 +120,9 @@ public class VentanaPrincipal {
 		pantallaPuntuacion.setHorizontalAlignment(SwingConstants.CENTER);
 
 		// Bordes y colores:
-		panelImagen.setBorder(BorderFactory.createLineBorder(Color.decode("#949BBA"), 1));
+		panelMinas.setBorder(BorderFactory.createTitledBorder("Minas"));
 		panelEmpezar.setBorder(BorderFactory.createTitledBorder("Empezar"));
-		panelPuntuacion.setBorder(BorderFactory.createLineBorder(Color.decode("#949BBA"), 1));
+		panelPuntuacion.setBorder(BorderFactory.createTitledBorder("Puntuación"));
 		panelJuego.setBorder(BorderFactory.createTitledBorder("Juego"));
 
 		// Colocamos los componentes:
@@ -124,7 +133,7 @@ public class VentanaPrincipal {
 		settings.weightx = 1;
 		settings.weighty = 1;
 		settings.fill = GridBagConstraints.BOTH;
-		ventana.add(panelImagen, settings);
+		ventana.add(panelMinas, settings);
 		// VERDE
 		settings = new GridBagConstraints();
 		settings.gridx = 1;
@@ -171,6 +180,7 @@ public class VentanaPrincipal {
 		}
 
 		// BotónEmpezar:
+		panelMinas.add(pantallaMinas);
 		panelEmpezar.add(botonEmpezar);
 		panelPuntuacion.add(pantallaPuntuacion);
 
@@ -189,7 +199,9 @@ public class VentanaPrincipal {
 
 		for (int i = 0; i < getJuego().getLadoTablero(); i++) {
 			for (int j = 0; j < getJuego().getLadoTablero(); j++) {
-				botonesJuego[i][j].addActionListener(new ActionBoton(this, i, j));
+				ActionBoton actionBoton = new ActionBoton(this, i, j);
+				botonesJuego[i][j].addActionListener(actionBoton);
+				botonesJuego[i][j].addMouseListener(actionBoton);
 			}
 		}
 	}
@@ -205,22 +217,37 @@ public class VentanaPrincipal {
 	 * @param j: posición horizontal de la celda.
 	 */
 	public void mostrarNumMinasAlrededor(int i, int j) {
-		panelesJuego[i][j].removeAll();
+
 		int numMinas = getJuego().getMinasAlrededor(i, j);
 		JLabel label = new JLabel();
 		if (numMinas == ControlJuego.MINA) {
-			label.setIcon(new ImageIcon("img/mina.png"));
-		} else {
-			if (numMinas != 0) {
-				label.setText(String.valueOf(numMinas));
-				label.setForeground(correspondenciaColores[Integer.parseInt(label.getText())]);
+			JButton mina = (JButton) panelesJuego[i][j].getComponent(0);
+			Icon iconoBoton = mina.getIcon();
+			if (iconoBoton != null) {
+				label.setIcon(new ImageIcon("img/minaDesactivada.png"));
+			} else {
+				label.setIcon(new ImageIcon("img/mina.png"));
 			}
-			panelesJuego[i][j].setBackground(Color.decode("#FAFFFF"));
-			actualizarPuntuacion();
-
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			panelesJuego[i][j].removeAll();
+			panelesJuego[i][j].add(label);
+			panelesJuego[i][j].setBorder(BorderFactory.createLineBorder(Color.GRAY));
+		} else {
+			JButton sinMina = (JButton) panelesJuego[i][j].getComponent(0);
+			Icon iconoBoton = sinMina.getIcon();
+			if (iconoBoton == null) {
+				if (numMinas != 0) {
+					label.setText(String.valueOf(numMinas));
+					label.setForeground(correspondenciaColores[Integer.parseInt(label.getText())]);
+				}
+				panelesJuego[i][j].setBackground(Color.decode("#FAFFFF"));
+				actualizarPuntuacion();
+				label.setHorizontalAlignment(SwingConstants.CENTER);
+				panelesJuego[i][j].removeAll();
+				panelesJuego[i][j].add(label);
+				
+			}
 		}
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		panelesJuego[i][j].add(label);
 		refrescarPantalla();
 	}
 
@@ -277,6 +304,10 @@ public class VentanaPrincipal {
 		pantallaPuntuacion.setText(String.valueOf(getJuego().getPuntuacion()));
 	}
 
+	public void actualizarMinas(int minas){
+		pantallaMinas.setText(String.valueOf(minas));
+	}
+
 	/**
 	 * Método para refrescar la pantalla
 	 */
@@ -314,6 +345,10 @@ public class VentanaPrincipal {
 		ventana.setVisible(true);
 		inicializarComponentes();
 		inicializarListeners();
+	}
+
+	public int getMinas(){
+		return Integer.parseInt(pantallaMinas.getText());
 	}
 
 }
