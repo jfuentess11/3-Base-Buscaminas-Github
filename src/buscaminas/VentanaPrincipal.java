@@ -274,7 +274,7 @@ public class VentanaPrincipal {
 		if (porExplosion) {
 			botonEmpezar.setIcon(new ImageIcon("img/caraTriste.png"));
 			JOptionPane.showMessageDialog(ventana, "¡HAS PERDIDIO!\nHas explotado una bomba...", "Fin del Juego",
-					JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.ERROR_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(ventana, "¡ENORABUENA!\nHas ganado la partida", "Fin del Juego",
 					JOptionPane.INFORMATION_MESSAGE);
