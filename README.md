@@ -1,4 +1,4 @@
-# BUSCAMINAS: Javier Fuentes
+# BUSCAMINAS: Javier Fuentes Santiago
 
 En este programa se encuentra la base para el Buscaminas de Desarrollo de intefaces (DAM2).
 
