@@ -9,42 +9,43 @@ import java.util.Random;
  * Si hay una mina en una posición guarda el número -1
  * Si no hay una mina, se guarda cuántas minas hay alrededor.
  * Almacena la puntuación de la partida
- * @author jesusredondogarcia
- *
+ * @author Javier Fuentes
+ * @since 1.0
+ * @version 1.0
  */
 public class ControlJuego {
+	/** Entero asociado que indica que es una Mina */
 	final static int MINA = -1;
+	/** Entero que indica las minas inicales de la partida */
 	private int minasIniciales = 20;
+	/** Entero que indica el tamaño del tablero */
 	private int ladoTablero = 10;
-
+	/** Visión lógica del tablero de juego */
 	private int [][] tablero;
+	/** Entero que nos idica la puntuación */
 	private int puntuacion;
-
+	/** ArrayList que guardará un entero que es la casilla en la que se encuentra una mina */
 	private ArrayList<Integer> minas = new ArrayList<>();
 	
-	public ControlJuego(int minas_iniciales,int lado_tablero){
-
-		minasIniciales = minas_iniciales;
-		ladoTablero = lado_tablero;
-
+	/**
+	 * Constructor parametrizado que inicializa una partida con los datos recibidos.
+	 * 
+	 * @param minasIniciales entero que indica las minas con las que se empieza la partida
+	 * @param ladoTablero entero qe indica el tamaño del tablero
+	 */
+	public ControlJuego(int minasIniciales,int ladoTablero){
+		this.minasIniciales = minasIniciales;
+		this.ladoTablero = ladoTablero;
 		tablero = new int[ladoTablero][ladoTablero];
-		
-		//Inicializamos una nueva partida
 		inicializarPartida();
-
-		depurarTablero();
-
 	}
 
-
+	/**
+	 * Constructor por defecto que inicilaiza una partida con los valores predefinidos
+	 */
 	public ControlJuego() {
-		//Creamos el tablero:
 		tablero = new int[ladoTablero][ladoTablero];
-		
-		//Inicializamos una nueva partida
 		inicializarPartida();
-
-		depurarTablero();
 	}
 	
 	
@@ -54,36 +55,36 @@ public class ControlJuego {
 	 * 			El resto de posiciones que no son minas guardan en el entero cuántas minas hay alrededor de la celda
 	 */
 	public void inicializarPartida(){
-
-		//TODO: Repartir minas e inicializar puntaci�n. Si hubiese un tablero anterior, lo pongo todo a cero para inicializarlo.
-
 		// ArrayList que guardará todas las posiciones del tablero.
 		ArrayList<Integer> posiciones = new ArrayList<>();
 		for (int i = 0; i < ladoTablero*ladoTablero; i++) {
 			posiciones.add(i);
 		}
-
+		/** Número aleatoio nque se irá generando */
+		Random rd = new Random();
+		/** Entero que indicará la posición en la que está mirando el ArrayList*/
+		int indice;
+		/** Posición del tablero  */
+		int posicion;
+		/** Columna en la que se encuentra esa posicón */
+		int columna;
+		/** Fila en la que se encuentra esa posición */
+		int fila;
 		// Se saca una posicion aleatoria del ArrayList y se coloca una mina en ella.
 		// Despues se borra esa posción para que no vuelva a salir para colocar una mina.
-		Random rd = new Random();
-		int indice;
-		int posicion;
-		int x;
-		int y;
 		for (int i = 0; i < minasIniciales; i++) {
 			indice = rd.nextInt(posiciones.size());
 			posicion = posiciones.get(indice);
-			x = posicion % ladoTablero;
-			y = posicion / ladoTablero;
-			tablero[x][y] = MINA;
+			columna = posicion % ladoTablero;
+			fila = posicion / ladoTablero;
+			tablero[columna][fila] = MINA;
 			posiciones.remove(indice);
 		}
-		
-		
-		//Al final del método hay que guardar el n�mero de minas para las casillas que no son mina:
-		//Si es una mina añade su posición en el array list para luego mostrarlas al final del juego.
+		//Al final del método hay que guardar el número de minas para las casillas que no son mina:
+		//Si es una mina añade su posición en el Arraylist para luego mostrarlas al final del juego.
 		for (int i = 0; i < tablero.length; i++) {
 			for (int j = 0; j < tablero[i].length; j++) {
+				// Si no es una mina
 				if (tablero[i][j] != MINA){
 					tablero[i][j] = calculoMinasAdjuntas(i,j);
 				}else{
@@ -94,7 +95,8 @@ public class ControlJuego {
 		}
 	}
 	
-	/**Cálculo de las minas adjuntas: 
+	/**
+	 * Cálculo de las minas adjuntas: 
 	 * Para calcular el número de minas tenemos que tener en cuenta que no nos salimos nunca del tablero.
 	 * Por lo tanto, como mucho la i y la j valdrán LADO_TABLERO-1.
 	 * Por lo tanto, como poco la i y la j valdrán 0.
@@ -103,25 +105,25 @@ public class ControlJuego {
 	 * @return : El número de minas que hay alrededor de la casilla [i][j]
 	 **/
 	private int calculoMinasAdjuntas(int i, int j){
+		/** Contador de minas que tiene adyacentes */
 		int contadorMina = 0;
-
-		// Posicion de donde se empieza a buscar.
+		/** Posicion de i en la que empezará a buscar */
 		int iInicial = Math.max(0, (i-1));
+		/** Posición de j en la que empezará a buscar */
 		int jInicial = Math.max(0, (j-1));
-
-		// Posicion de donde se termina de buscar.
+		/** Posición de i en la que terminará de buscar */
 		int iFinal = Math.min(ladoTablero-1, (i+1));
+		/** Posición de j en la que terminrá de buscar */
 		int jFinal = Math.min(ladoTablero-1, (j+1));
 
 		for (int vertical = iInicial; vertical <= iFinal; vertical++) {
 			for (int horizontal = jInicial; horizontal <= jFinal; horizontal++) {
+				// Si es una mina
 				if(tablero[vertical][horizontal]==MINA){
 					contadorMina++;
 				}
-					
 			}
 		}
-		
 		return contadorMina;
 	}
 	
@@ -133,15 +135,15 @@ public class ControlJuego {
 	 * @return : Verdadero si no ha explotado una mina. Falso en caso contrario.
 	 */
 	public boolean abrirCasilla(int i, int j){
-		boolean noHayMina = false;
+		/** Indicará que esa casilla es o no una mina */
+		boolean esMina = true;
+		// Si no es una mina
 		if(getMinasAlrededor(i, j)!=MINA){
-			noHayMina = true;
+			esMina = false;
 			this.puntuacion++;
 		}
-		return noHayMina;
+		return esMina;
 	}
-	
-	
 	
 	/**
 	 * Método que checkea si se ha terminado el juego porque se han abierto todas las casillas.
@@ -151,7 +153,6 @@ public class ControlJuego {
 		// Si la puntuación es igual al número de celdas que no son minas ha ganado. (true)
 		return getPuntuacion()==(ladoTablero*ladoTablero-minasIniciales);
 	}
-	
 	
 	/**
 	 * Método que pinta por pantalla toda la información del tablero, se utiliza para depurar

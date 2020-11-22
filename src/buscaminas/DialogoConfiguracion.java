@@ -12,35 +12,56 @@ import java.awt.GridLayout;
 
 /**
  * Dialogo que aparacerá al inicio del juego si quieres cambiar la
- * configuración.
+ * configuración. Permite cambiar el tamaño del tablero y el número de minas
+ * iniciales ya que modifica los atributos de la clase {@link ControlJuego}
  * 
+ * @see ControlJuego
+ * @see VentanaPrincipal
  * @author Javier Fuentes
+ * @since 1.0
+ * @version 1.0
  */
 public class DialogoConfiguracion extends JDialog {
 
     private static final long serialVersionUID = 1L;
 
     // Componentes que tedrá el diálogo
+
+    /** {@link VentanaPrincipal} del buscaminas */
     VentanaPrincipal ventana;
     JTextField tituloPrincipal;
     JTextField tituloTablero;
     JTextField tituloMinas;
+    /** Guardará el tamaño deseado del tablero */
     JFormattedTextField tamanoTablero;
-    JFormattedTextField numMinas = new JFormattedTextField();
+    /** Guardará el número de minas iniciales que se desee */
+    JFormattedTextField numMinas;
+    /** Botón que al pulsarlo se creará la partida con los datos deseados */
     JButton botonAceptar;
+    /**
+     * Guardará el tamaño con el que se inicia el tablero, se inicializa con el
+     * valor por defecto, pero luego guardará el valor introdocido por el usuario
+     * para jugar más partidas
+     */
     int tamano = 10;
+    /**
+     * Guardará el número de minas con las que se inicia, se inicializa con el valor
+     * por defecto, pero luego guardará el valor introdocido por el usuario para
+     * jugar más partidas
+     */
     int minas = 20;
 
     /**
-     * Constructor del Dialogo
+     * Constructor. Marca el tamaño, la posición y el cierre del diálogo.
      * 
-     * @param ventana recibe la ventana principal del buscaminas
+     * @param ventana recibe la ventana principal del buscaminas para poder acceder
+     *                a los atributos de {@link ControlJuego}
      */
     public DialogoConfiguracion(VentanaPrincipal ventana) {
         super();
         setModal(true);
         setBounds(0, 0, 300, 400);
-        setLocationRelativeTo(ventana.ventana);
+        setLocationRelativeTo(ventana.ventana); // Se coloca en el centro del frame de la ventana que recibe
         this.ventana = ventana;
         iniciarComponentes();
         iniciarListener();
@@ -88,7 +109,7 @@ public class DialogoConfiguracion extends JDialog {
     }
 
     /**
-     * Inicializa el listener del botonAceptar
+     * Inicializa el listener del {@link botonAceptar}
      */
     public void iniciarListener() {
 
@@ -97,11 +118,14 @@ public class DialogoConfiguracion extends JDialog {
             tamano = (Integer) tamanoTablero.getValue();
             minas = (Integer) numMinas.getValue();
 
-            if (tamano == 10 && minas ==20) {
-                JOptionPane.showMessageDialog(this, "Vas a jugar con la configuración por defecto",
-                        "Información", JOptionPane.CLOSED_OPTION);
+            // Si no cambia la configuración se jugará con la configuración por defecto
+            if (tamano == 10 && minas == 20) {
+                JOptionPane.showMessageDialog(this, "Vas a jugar con la configuración por defecto", "Información",
+                        JOptionPane.CLOSED_OPTION);
             }
 
+            // Si se quieren poner más minas que casillas tiene el buscaminas saltará este
+            // mensaje y tendrá que volver a intoducir los datos
             if (tamano * tamano < minas) {
                 JOptionPane.showMessageDialog(this, "Hay más minas que casillas en el tablero, prueba con otros datos",
                         "Error", JOptionPane.CLOSED_OPTION);
