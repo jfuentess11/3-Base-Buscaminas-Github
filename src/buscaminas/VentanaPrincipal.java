@@ -112,7 +112,7 @@ public class VentanaPrincipal {
 		pantallaMinas.setEditable(false);
 		pantallaMinas.setHorizontalAlignment(SwingConstants.CENTER);
 		botonEmpezar = new JButton();
-		botonEmpezar.setIcon(new ImageIcon("img/caraFeliz.png"));
+		botonEmpezar.setIcon(new ImageIcon(getClass().getResource("img/caraFeliz.png")));
 		pantallaPuntuacion = new JTextField("0");
 		pantallaPuntuacion.setBackground(Color.decode("#FAFFFF"));
 		pantallaPuntuacion.setFont(new FontUIResource("", Font.BOLD, 20));
@@ -224,9 +224,9 @@ public class VentanaPrincipal {
 			JButton mina = (JButton) panelesJuego[i][j].getComponent(0);
 			Icon iconoBoton = mina.getIcon();
 			if (iconoBoton != null) {
-				label.setIcon(new ImageIcon("img/minaDesactivada.png"));
+				label.setIcon(new ImageIcon(getClass().getResource("img/minaDesactivada.png")));
 			} else {
-				label.setIcon(new ImageIcon("img/mina.png"));
+				label.setIcon(new ImageIcon(getClass().getResource("img/mina.png")));
 			}
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			panelesJuego[i][j].removeAll();
@@ -272,7 +272,7 @@ public class VentanaPrincipal {
 
 		new JOptionPane();
 		if (porExplosion) {
-			botonEmpezar.setIcon(new ImageIcon("img/caraTriste.png"));
+			botonEmpezar.setIcon(new ImageIcon(getClass().getResource("img/caraTriste.png")));
 			JOptionPane.showMessageDialog(ventana, "¡HAS PERDIDIO!\nHas explotado una bomba...", "Fin del Juego",
 					JOptionPane.ERROR_MESSAGE);
 		} else {

@@ -108,7 +108,7 @@ public class ActionBoton extends MouseInputAdapter implements ActionListener {
 		boolean clicDerecho = (e.getButton() == MouseEvent.BUTTON3);
 		if (!tieneBandera) {
 			if (clicDerecho) {
-				ventana.botonesJuego[i][j].setIcon(new ImageIcon("img/bandera.png"));
+				ventana.botonesJuego[i][j].setIcon(new ImageIcon(getClass().getResource("img/bandera.png")));
 				tieneBandera = true;
 				ventana.actualizarMinas(ventana.getMinas()-1);
 			}
